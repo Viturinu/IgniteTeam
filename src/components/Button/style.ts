@@ -7,7 +7,7 @@ type Props = {
     type: ButtonTypeStyleProps;
 }
 
-export const Container = styled(TouchableOpacity) <Props>`
+export const Container = styled.TouchableOpacity<Props>`
     height: 56px;
 
     min-height: 56 px;
