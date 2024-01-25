@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Container } from "./styles";
 import { Header } from "@components/Header";
 import { Highlight } from "@components/Highlight";
@@ -6,7 +6,8 @@ import { GroupCard } from "@components/GroupCard";
 import { FlatList } from "react-native";
 import { ListEmpty } from "@components/ListEmpty";
 import { Button } from "@components/Button";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { groupGetAll } from "@storage/group/groupGetAll";
 
 export function Groups() {
 
@@ -15,9 +16,26 @@ export function Groups() {
     const navigation = useNavigation();
 
     function handleNewGroup() {
-        //const navigation = useNavigation(); No need to use this hook, cause we can pass it through properties/parameters in our screens components parameters, as example above
-        navigation.navigate("new");
+        try {
+            //const navigation = useNavigation(); No need to use this hook, cause we can pass it through properties/parameters in our screens components parameters, as example above
+            navigation.navigate("new");
+        } catch (error) {
+            console.log(error);
+        }
     }
+
+    async function fetchGroups() {
+        try {
+            const data = await groupGetAll();
+            setGroups(data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useFocusEffect(useCallback(() => {
+        fetchGroups();
+    }, []));
 
     return (
         <Container>
