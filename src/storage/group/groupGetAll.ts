@@ -7,7 +7,7 @@ export async function groupGetAll() {
         const storage = await AsyncStorage.getItem(GROUP_COLLECTION);
         const groups: string[] = storage ? JSON.parse(storage) : [];
 
-        return groups;
+        return groups; //retorna o JSON
 
     } catch (error) {
         throw error

@@ -6,6 +6,8 @@ import { Button } from "@components/Button";
 import { Input } from "@components/Input";
 import { useNavigation } from "@react-navigation/native";
 import { groupCreate } from "@storage/group/groupCreate";
+import { AppError } from "@utils/AppError";
+import { Alert } from "react-native";
 
 export function NewGroup() {
 
@@ -15,10 +17,18 @@ export function NewGroup() {
 
     async function handleNewGroup() {
         try {
-            await groupCreate(group);
+            if (group.trim().length === 0) return Alert.alert("Novo grupo", "Informe o nome da turma");
+            await groupCreate(group); //throw CreatedClass(AppError) está em um if no groupCreate.ts; assim tratamos as excessões do nosso app
             navigation.navigate("players", { group }); //posso passar assim, ao invés de passar group : group, typescript já identifica automaticamente se tiver mesmo nome
         } catch (error) {
-            console.log(error);
+            if (error instanceof AppError) {
+                Alert.alert("Novo grupo", error.message);
+                console.log(error);
+            }
+            else {
+                Alert.alert("Novo grupo", "Não foi possível criar um novo grupo.");
+                console.log(error);
+            }
         }
     }
 
